@@ -1,5 +1,33 @@
 package NHS;
 
-public class PatientDataLayerInterface {
+public interface PatientDataLayerInterface {
+	
+	/**
+	 * Adds a new Patient to the data base
+	 * @param fname The Patient's first name
+	 * @param lname The Patient's last name
+	 * @param regNo The Patient's NHS registration number
+	 * @param address The Patient's address
+	 * @param cond The patient's medical condition
+	 * @return Message indicating outcome of adding Patient
+	 */
+	public String addPatient(Patient patient);
+	
+	/**
+	 * Updates an existing Patient record
+	 * @param regNo The Patient's NHS Registration number
+	 * @return The Patient's record
+	 */
+	public String updatePatient(String regNo);
+	
+	/**
+	 * 
+	 * @param regNo The Patient's NHS Registration Number
+	 * @param patient New Patient record
+	 * @return True if update successful
+	 */
+	public String getPatient(String regNo, Patient patient);
+
+}
 
 }
