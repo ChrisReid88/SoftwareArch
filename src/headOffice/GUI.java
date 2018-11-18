@@ -1,4 +1,4 @@
-package NHS;
+package headOffice;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -9,18 +9,18 @@ public class GUI
 	// First set up the panel with the labels and text boxes
 	private JPanel inputPanel = new JPanel();
 	private JLabel firstNameLabel = new JLabel("First name");
-	private JTextField firstNameTxt = new JTextField(30);
+	private JTextField firstNameTxt = new JTextField(10);
 	private JLabel lastNameLabel = new JLabel("Last name");
-	private JTextField lastNameTxt = new JTextField(30);
+	private JTextField lastNameTxt = new JTextField(10);
 	private JLabel regNumberLabel = new JLabel("NHS Registration number");
-	private JTextField regNumberTxt = new JTextField(30);
+	private JTextField regNumberTxt = new JTextField(10);
 	private JLabel addressLabel = new JLabel("Address");
-	private JTextField addressTxt = new JTextField(100);
+	private JTextField addressTxt = new JTextField(10);
 	private JLabel conditionLabel = new JLabel("Medical condition");
-	private JTextField conditionTxt = new JTextField(30);
+	private JTextField conditionTxt = new JTextField(10);
 	{
 		// Initialise the panel
-		inputPanel.setLayout(new GridLayout(3,2));
+		inputPanel.setLayout(new GridLayout(5,1));
 		inputPanel.add(firstNameLabel);
 		inputPanel.add(firstNameTxt);
 		inputPanel.add(lastNameLabel);
@@ -41,7 +41,7 @@ public class GUI
 //	private JButton removeButton = new JButton("Remove Student");
 	{
 		// Initialise the panel
-		buttonPanel.setLayout(new GridLayout(4, 1));
+		buttonPanel.setLayout(new GridLayout(3, 1));
 		buttonPanel.add(addButton);
 		buttonPanel.add(getButton);
 		buttonPanel.add(updateButton);
@@ -88,7 +88,8 @@ public class GUI
 		
 		// Add your custom action listeners here
 		addButton.addActionListener(new AddButtonListener());
-//		getButton.addActionListener(new GetButtonListener());
+		getButton.addActionListener(new GetButtonListener());
+		updateButton.addActionListener(new UpdateButtonListener());
 		
 		// The default close action
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -113,5 +114,35 @@ public class GUI
 			feedbackArea.setText(result);
 		}
 	}
-	
+	private class GetButtonListener implements ActionListener
+	{
+		// Called when the Add button is clicked
+		public void actionPerformed(ActionEvent arg0) 
+		{
+			// Get the required values from the text fields
+			
+			String regNumber = regNumberTxt.getText();
+			// Try and add the student record.  Get the result from the operation
+			String result = appLayer.getPatient( regNumber);
+			// Set the text in the feedback area to the result
+			feedbackArea.setText(result);
+		}
+	}
+	private class UpdateButtonListener implements ActionListener
+	{
+		// Called when the update button is clicked
+		public void actionPerformed(ActionEvent arg0) 
+		{
+			// Get the required values from the text fields
+			String firstname = firstNameTxt.getText();
+			String lastname = lastNameTxt.getText();
+			String regNumber = regNumberTxt.getText();
+			String address = addressTxt.getText();
+			String condition = addressTxt.getText();
+			// Try and add the student record.  Get the result from the operation
+			String result = appLayer.updatePatient(firstname, lastname, regNumber, address, condition);
+			// Set the text in the feedback area to the result
+			feedbackArea.setText(result);
+		}
+	}
 }

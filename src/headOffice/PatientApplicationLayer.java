@@ -1,4 +1,5 @@
-package NHS;
+package headOffice;
+
 
 public class PatientApplicationLayer implements PatientApplicationLayerInterface {
 	
@@ -24,17 +25,36 @@ public class PatientApplicationLayer implements PatientApplicationLayerInterface
 		}
 	}
 
-	@Override
+	
+	public String getPatient(String regNo) {
+		Patient patient = dataLayer.getPatient(regNo);
+		if (patient != null)
+		{
+			// Return textual representation of the patient record
+			return patient.getRegNumber() + "\n" + patient.getFirstname() + "\n" + patient.getLastname();
+		}
+		else
+		{
+			// Return fail message
+			return "patient " + regNo + " does not exist";
+		}
+	}
+	
 	public String updatePatient(String fname, String lname, String regNo, String address, String cond) {
-		// TODO Auto-generated method stub
-		return null;
+		// Create a new Patient record object
+		Patient patient = new Patient(fname, lname, regNo, address, cond);
+		// Try and update the Patient record with the data layer
+		boolean success = dataLayer.updatePatient(regNo, patient);
+		if (success)
+		{
+			return regNo  + " successfully updated";
+		}
+		else
+		{
+			return regNo  + " not updated";
+		}
 	}
 
-	@Override
-	public String getPatient(String regNo) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	
 }

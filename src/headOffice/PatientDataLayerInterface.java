@@ -1,4 +1,6 @@
-package NHS;
+package headOffice;
+
+import java.rmi.RemoteException;
 
 public interface PatientDataLayerInterface {
 	
@@ -11,14 +13,14 @@ public interface PatientDataLayerInterface {
 	 * @param cond The patient's medical condition
 	 * @return Message indicating outcome of adding Patient
 	 */
-	public String addPatient(Patient patient);
+	public boolean addPatient(Patient patient);
 	
 	/**
 	 * Updates an existing Patient record
 	 * @param regNo The Patient's NHS Registration number
 	 * @return The Patient's record
 	 */
-	public String updatePatient(String regNo);
+
 	
 	/**
 	 * 
@@ -26,8 +28,9 @@ public interface PatientDataLayerInterface {
 	 * @param patient New Patient record
 	 * @return True if update successful
 	 */
-	public String getPatient(String regNo, Patient patient);
+	public Patient getPatient(String regNo);
+	public boolean updatePatient(String regNo, Patient patient);
 
 }
 
-}
+

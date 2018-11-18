@@ -1,4 +1,4 @@
-package NHS;
+package headOffice;
 
 public interface PatientApplicationLayerInterface {
 

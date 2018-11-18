@@ -1,13 +1,17 @@
-package NHS;
+package headOffice;
 
-public class Patient {
+import java.io.Serializable;
 
+public class Patient implements Serializable {
+
+
+	private static final long serialVersionUID = 1L;
 	private String firstname; 
 	private String lastname;
 	private String regNumber;
 	private String address;
 	private String condition;
-	
+
 	public Patient(String fname, String lname, String regNo, String address, String cond) {
 		this.firstname = fname;
 		this.lastname = lname;
