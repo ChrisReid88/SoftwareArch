@@ -13,7 +13,7 @@ public class Database implements DatabaseImpl {
 
 	public boolean addPatient(Patient patient) {
 		try {
-			
+
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			// Establish a connection to the database
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/patients?user=Java&password=Java");
@@ -30,18 +30,16 @@ public class Database implements DatabaseImpl {
 				Statement statement = conn.createStatement();
 
 				// Build the INSERT statement
-				String update = "INSERT INTO patientrecords (Firstname, Lastname, RegNumber, Address, MedCondition) VALUES ('" 
-						+ patient.getFirstname() + "', '" 
-						+ patient.getLastname() + "', '" 
-						+ patient.getRegNumber() + "', '" 
-						+ patient.getAddress() + "', '"
-						+ patient.getCondition() + "')";
+				String update = "INSERT INTO patientrecords (Firstname, Lastname, RegNumber, Address, MedCondition) VALUES ('"
+						+ patient.getFirstname() + "', '" + patient.getLastname() + "', '" + patient.getRegNumber()
+						+ "', '" + patient.getAddress() + "', '" + patient.getCondition() + "')";
 				// Execute the statement
 
 				statement.executeUpdate(update);
 				// Release resources held by the statement
 				statement.close();
-				// Release resources held by the connection. This also ensures that the INSERT completes
+				// Release resources held by the connection. This also ensures that the INSERT
+				// completes
 				conn.close();
 				System.out.println("Update successful");
 				return true;
@@ -62,20 +60,19 @@ public class Database implements DatabaseImpl {
 	}
 
 	public Patient getPatient(String regNo) {
-		
+
 		Patient patient = null;
 		try {
-			
-			
+
 			String firstname = "";
 			String address = "";
 			String lastname = "";
 			String cond = "";
 			String regNumber = "";
-			
+
 			// Load the driver
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			
+
 			// Establish a connection to the database
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/patients?user=Java&password=Java");
 			Statement statement = conn.createStatement();
@@ -83,8 +80,8 @@ public class Database implements DatabaseImpl {
 			String query = "SELECT * FROM  patientrecords WHERE RegNumber = '" + regNo + "'";
 			// Return results
 			ResultSet results = statement.executeQuery(query);
-			
-			//While results aren't empty retrieve each field from the record
+
+			// While results aren't empty retrieve each field from the record
 			while (results.next()) {
 				firstname = results.getString("Firstname");
 				lastname = results.getString("Lastname");
@@ -92,14 +89,14 @@ public class Database implements DatabaseImpl {
 				address = results.getString("Address");
 				cond = results.getString("MedCondition");
 			}
-			
+
 			// Store in the instantiated patient object
 			patient = new Patient(firstname, lastname, regNumber, address, cond);
-			
+
 			// Close statement and connection
 			statement.close();
 			conn.close();
-				
+
 		} catch (ClassNotFoundException cnf) {
 			System.err.println("Could not load driver");
 			System.err.println(cnf.getMessage());
@@ -110,7 +107,6 @@ public class Database implements DatabaseImpl {
 		return patient;
 
 	}
-
 
 	public boolean updatePatient(String regNo, Patient patient) {
 		try {
@@ -156,6 +152,34 @@ public class Database implements DatabaseImpl {
 			System.err.println(sqe.getMessage());
 		}
 		return true;
-	
+
 	}
+
+	public boolean addCall(String name) {
+		try {
+
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			// Establish a connection to the database
+			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/patients?user=Java&password=Java");
+
+			Statement statement2 = conn.createStatement();
+			// Query to get all records from the database
+			String query = "INSERT INTO callrecords (Name) VALUES ('" + name + "')";
+			// Results from executing the query
+			statement2.executeUpdate(query);
+
+			statement2.close();
+			conn.close();
+			System.out.println("Update successful");
+
+		} catch (ClassNotFoundException cnf) {
+			System.err.println("Could not load driver");
+			System.err.println(cnf.getMessage());
+		} catch (SQLException sqe) {
+			System.err.println("Error in SQL Update");
+			System.err.println(sqe.getMessage());
+		}
+		return true;
+	}
+
 }

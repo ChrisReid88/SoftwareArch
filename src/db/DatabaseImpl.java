@@ -32,5 +32,8 @@ public interface DatabaseImpl extends Remote {
 	 * @return True if Patient updated, false otherwise 
 	 */
 	public boolean updatePatient(String regNo, Patient patient) throws RemoteException;
+
+	public boolean addCall(String name) throws RemoteException;
+
 	
 }

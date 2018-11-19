@@ -1,7 +1,5 @@
 package headOffice;
 
-import java.rmi.RemoteException;
-
 public interface PatientDataLayerInterface {
 	
 	/**
@@ -29,7 +27,9 @@ public interface PatientDataLayerInterface {
 	 * @return True if update successful
 	 */
 	public Patient getPatient(String regNo);
+	
 	public boolean updatePatient(String regNo, Patient patient);
+
 
 }
 

@@ -31,7 +31,11 @@ public class PatientApplicationLayer implements PatientApplicationLayerInterface
 		if (patient != null)
 		{
 			// Return textual representation of the patient record
-			return patient.getRegNumber() + "\n" + patient.getFirstname() + "\n" + patient.getLastname();
+			return patient.getRegNumber() + "\n" + 
+					patient.getFirstname() + "\n" + 
+					patient.getLastname() + "\n" + 
+					patient.getAddress() + "\n" + 
+					patient.getCondition() ;
 		}
 		else
 		{
