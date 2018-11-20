@@ -19,20 +19,44 @@ import javax.swing.JTextField;
 public class RegionalGUI {
 	// First set up the panel with the labels and text boxes
 	private JPanel inputPanel = new JPanel();
-	private JLabel nameLabel = new JLabel("First name");
-	private JTextField nameTxt = new JTextField(10);
+	private JLabel FirstnameLabel = new JLabel("First name");
+	private JTextField FirstnameTxt = new JTextField(10);
+	
+	private JLabel LastnameLabel = new JLabel("First name");
+	private JTextField LastnameTxt = new JTextField(10);
+	
+	private JLabel TimeLabel = new JLabel("First name");
+	private JTextField TimeTxt = new JTextField(10);
+	
+	private JLabel LocationLabel = new JLabel("First name");
+	private JTextField LocationTxt = new JTextField(10);
+	
+	private JLabel ActionLabel = new JLabel("First name");
+	private JTextField ActionTxt = new JTextField(10);
 	private String data;
 
 	{
 		// Initialise the panel
 		inputPanel.setLayout(new GridLayout(5, 1));
-		inputPanel.add(nameLabel);
-		inputPanel.add(nameTxt);
+		inputPanel.add(FirstnameLabel);
+		inputPanel.add(FirstnameTxt);
+		
+		inputPanel.add(LastnameLabel);
+		inputPanel.add(LastnameTxt);
+		
+		inputPanel.add(TimeLabel);
+		inputPanel.add(TimeTxt);
+		
+		inputPanel.add(LocationLabel);
+		inputPanel.add(LocationTxt);
+		
+		inputPanel.add(ActionLabel);
+		inputPanel.add(ActionTxt);
 	}
 
 	// Next the panel with the buttons
 	private JPanel buttonPanel = new JPanel();
-	private JButton addButton = new JButton("Add patient");
+	private JButton addButton = new JButton("Enter");
 
 	{
 		// Initialise the panel
@@ -91,12 +115,14 @@ public class RegionalGUI {
 				Socket clientSocket = listenSocket.accept();
 				Connection c = new Connection(clientSocket);
 				data = c.getData();
-				feedbackArea.setText(data);
+				String result = appLayer.getPatient(data);
+				feedbackArea.setText(result);
 			}
 		} 
 		catch(IOException e) {
 			System.out.println("Listen: " + e.getMessage());
 		}
+		
 		
 		
 	}
@@ -106,7 +132,11 @@ public class RegionalGUI {
 		// Called when the Add button is clicked
 		public void actionPerformed(ActionEvent arg0) {
 			// Get the required values from the text fields
-			String name = nameTxt.getText();
+			String fname = FirstnameTxt.getText();
+			String lname = LastnameTxt.getText();
+			String time = TimeTxt.getText();
+			String location = LocationTxt.getText();
+			String action = ActionTxt.getText();
 			
 			String result = appLayer.addCall(data);
 			//System.out.println(data+" DONE");

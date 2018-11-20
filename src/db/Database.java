@@ -56,7 +56,7 @@ public class Database implements DatabaseImpl {
 			System.err.println(sqe.getMessage());
 		}
 
-		return true;
+		return false;
 	}
 
 	public Patient getPatient(String regNo) {

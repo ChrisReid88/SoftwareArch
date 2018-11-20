@@ -1,12 +1,10 @@
 package regionalOffice;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.Socket;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 import db.DatabaseImpl;
+import headOffice.Patient;
 
 public class RegDataLayer implements RegDataLayerInterface {
 
@@ -29,4 +27,22 @@ public class RegDataLayer implements RegDataLayerInterface {
 			return false;
 		}
 	}
+
+	public Patient getPatient(String regNo) {
+		Patient student = null;
+		try {
+			// Get the registry from the server (null = local host)
+			Registry registry = LocateRegistry.getRegistry(null);
+
+			// Look up the remote object
+			DatabaseImpl stub = (DatabaseImpl) registry.lookup("Database");
+			student = stub.getPatient(regNo);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return student;
+	}
+
 }

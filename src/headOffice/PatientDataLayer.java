@@ -19,9 +19,9 @@ public class PatientDataLayer implements PatientDataLayerInterface {
 
 			// Look up the remote object
 			DatabaseImpl stub = (DatabaseImpl) registry.lookup("Database");
-			stub.addPatient(patient);
+			boolean res = stub.addPatient(patient);
 			
-			return true;
+			return res;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -35,8 +35,8 @@ public class PatientDataLayer implements PatientDataLayerInterface {
 
 			// Look up the remote object
 			DatabaseImpl stub = (DatabaseImpl) registry.lookup("Database");
-			stub.updatePatient(regNo, patient);
-			return true;
+			boolean res= stub.updatePatient(regNo, patient);
+			return res;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
