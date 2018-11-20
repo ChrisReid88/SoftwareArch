@@ -3,9 +3,9 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import javax.swing.JButton;
@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 
 
 public class RegionalGUI {
+	
 	// First set up the panel with the labels and text boxes
 	private JPanel inputPanel = new JPanel();
 	private JLabel FirstnameLabel = new JLabel("First name");
@@ -34,6 +35,7 @@ public class RegionalGUI {
 	private JLabel ActionLabel = new JLabel("First name");
 	private JTextField ActionTxt = new JTextField(10);
 	private String data;
+	private String result;
 
 	{
 		// Initialise the panel
@@ -57,11 +59,13 @@ public class RegionalGUI {
 	// Next the panel with the buttons
 	private JPanel buttonPanel = new JPanel();
 	private JButton addButton = new JButton("Enter");
+	private JButton sendButton = new JButton("Send");
 
 	{
 		// Initialise the panel
-		buttonPanel.setLayout(new GridLayout(3, 1));
+		buttonPanel.setLayout(new GridLayout(2, 1));
 		buttonPanel.add(addButton);
+		buttonPanel.add(sendButton);
 	}
 
 	// Now create a panel with the input and button panels in. This is the top panel
@@ -74,7 +78,7 @@ public class RegionalGUI {
 
 	// Create the panel which will display the feedback text
 	private JPanel feedbackPanel = new JPanel();
-	private JTextArea feedbackArea = new JTextArea(10, 40);
+	private JTextArea feedbackArea = new JTextArea(5, 30);
 	{
 		feedbackArea.setEditable(false);
 		feedbackPanel.setLayout(new GridLayout(1, 1));
@@ -82,7 +86,7 @@ public class RegionalGUI {
 	}
 
 	// Finally create the window to display the panels
-	private JFrame window = new JFrame();
+	private JFrame window = new JFrame("Regional Hospital");
 	{
 		window.setLayout(new GridLayout(2, 1));
 		window.add(topPanel);
@@ -100,9 +104,11 @@ public class RegionalGUI {
 	 */
 	public RegionalGUI(RegAppLayerInterface appLayer) {
 		this.appLayer = appLayer;
-
+		String[] lines = null;
+		
 		// Add your custom action listeners here
 		addButton.addActionListener(new AddButtonListener());
+		sendButton.addActionListener(new SendButtonListener());
 
 		// The default close action
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -115,18 +121,23 @@ public class RegionalGUI {
 				Socket clientSocket = listenSocket.accept();
 				Connection c = new Connection(clientSocket);
 				data = c.getData();
-				String result = appLayer.getPatient(data);
-				feedbackArea.setText(result);
+				result = appLayer.getPatient(data);
+				lines = result.split("\\s*\\r?\\n\\s*");
+				
+				feedbackArea.setText("RECEIVED FROM HEAD OFFICE!" + 
+									"\nNHS Registration No.:    " +lines[0] +
+									"\nFirst name:                        " + lines[1] + 
+									"\nLast name:                        " + lines[2] +
+									"\nAddress:                            " + lines[3] +
+									"\nCondition:                          " + lines[4]);
+				
 			}
 		} 
 		catch(IOException e) {
 			System.out.println("Listen: " + e.getMessage());
-		}
-		
-		
-		
+		}		
 	}
-
+	
 	// The action listener on the Add button.
 	private class AddButtonListener implements ActionListener {
 		// Called when the Add button is clicked
@@ -138,10 +149,33 @@ public class RegionalGUI {
 			String location = LocationTxt.getText();
 			String action = ActionTxt.getText();
 			
-			String result = appLayer.addCall(data);
+			String add = appLayer.addCall(data);
 			//System.out.println(data+" DONE");
 			// Set the text in the feedback area to the result
 			feedbackArea.setText(result);
+		}
+	}
+	private class SendButtonListener implements ActionListener {
+		// Called when the Add button is clicked
+		public void actionPerformed(ActionEvent arg0) {
+			// Get the required values from the text fields
+	
+			
+			Socket s = null;
+			try {
+				int serverPort = 6000;
+				s = new Socket("localhost", serverPort);
+				DataInputStream in = new DataInputStream( s.getInputStream());
+				DataOutputStream out = new DataOutputStream( s.getOutputStream());
+				System.out.println(result);
+				out.writeUTF(result); // UTF is a string encoding format
+//				String co = in.readUTF();
+//				System.out.println(co);
+				s.close();
+			} 
+			catch (Exception e){
+				System.out.println("Error:"+e.getMessage());
+			}
 		}
 	}
 }

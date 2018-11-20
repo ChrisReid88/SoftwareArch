@@ -64,7 +64,7 @@ public class GUI {
 
 
 	// Finally create the window to display the panels
-	private JFrame window = new JFrame();
+	private JFrame window = new JFrame("Head Office");
 	{
 		window.setLayout(new GridLayout(1, 1));
 		window.add(topPanel);
@@ -105,17 +105,7 @@ public class GUI {
 			// Try and add the student record. Get the result from the operation
 			String result = appLayer.addPatient(firstname, lastname, regNumber, address, condition);
 			// Set the text in the feedback area to the result
-			Socket s = null;
-			try {
-				int serverPort = 7896;
-				s = new Socket("localhost", serverPort);
-				DataOutputStream out = new DataOutputStream( s.getOutputStream());
-				out.writeUTF(regNumber); // UTF is a string encoding format
-				s.close();
-			} 
-			catch (Exception e){
-				System.out.println("Error:"+e.getMessage());
-			}
+			
 		}
 	}
 

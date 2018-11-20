@@ -1,5 +1,7 @@
 package headOffice;
 
+import java.io.DataOutputStream;
+import java.net.Socket;
 
 public class PatientApplicationLayer implements PatientApplicationLayerInterface {
 	
@@ -18,7 +20,19 @@ public class PatientApplicationLayer implements PatientApplicationLayerInterface
 	public String addPatient(String fname, String lname, String regNo, String address, String cond) {
 		Patient patient = new Patient(fname, lname, regNo, address, cond);
 		boolean success = dataLayer.addPatient(patient);
+		Socket s = null;
+		try {
+			int serverPort = 7896;
+			s = new Socket("localhost", serverPort);
+			DataOutputStream out = new DataOutputStream( s.getOutputStream());
+			out.writeUTF(regNo); // UTF is a string encoding format
+			s.close();
+		} 
+		catch (Exception e){
+			System.out.println("Error:"+e.getMessage());
+		}
 		if (success) {
+			
 			return regNo + " added.";
 		} else {
 			return regNo + " failed to add.";
