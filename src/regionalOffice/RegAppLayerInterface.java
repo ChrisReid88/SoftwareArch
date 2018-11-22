@@ -12,4 +12,7 @@ public interface RegAppLayerInterface {
 	 * @return Message indicating the outcome of getting the Patient
 	 */
 	public String getPatient(String regNo);
+
+	public String checkData();
+
 }

@@ -4,6 +4,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -18,41 +19,46 @@ import javax.swing.JTextField;
 public class MobileGUI {
 	// First set up the panel with the labels and text boxes
 	private JPanel inputPanel = new JPanel();
-	private JLabel firstnameLabel = new JLabel("First name");
-	private JTextField firstnameTxt = new JTextField(10);
-
-	private JLabel lastnameLabel = new JLabel("Last name");
-	private JTextField lastnameTxt = new JTextField(10);
-
-	private JLabel timeLabel = new JLabel("Time");
-	private JTextField timeTxt = new JTextField(10);
-
-	private JLabel locationLabel = new JLabel("Location");
-	private JTextField locationTxt = new JTextField(10);
-
-	private JLabel actionLabel = new JLabel("Action taken");
-	private JTextField actionTxt = new JTextField(10);
-
+	private JLabel FirstnameLabel = new JLabel("First name");
+	private JTextField FirstnameTxt = new JTextField(10);
+	
+	private JLabel LastnameLabel = new JLabel("Last name");
+	private JTextField LastnameTxt = new JTextField(10);
+	
+	private JLabel TimeLabel = new JLabel("Time");
+	private JTextField TimeTxt = new JTextField(10);
+	
+	private JLabel LocationLabel = new JLabel("Location");
+	private JTextField LocationTxt = new JTextField(10);
+	
+	private JLabel ReasonLabel = new JLabel("Reason");
+	private JTextField ReasonTxt = new JTextField(10);
+	
+	private JLabel ActionLabel = new JLabel("Action Taken");
+	private JTextField ActionTxt = new JTextField(10);
 	private String data;
 	private String callData;
 
 	{
 		// Initialise the panel
-		inputPanel.setLayout(new GridLayout(5, 1));
-		inputPanel.add(firstnameLabel);
-		inputPanel.add(firstnameTxt);
-
-		inputPanel.add(lastnameLabel);
-		inputPanel.add(lastnameTxt);
-
-		inputPanel.add(timeLabel);
-		inputPanel.add(timeTxt);
-
-		inputPanel.add(locationLabel);
-		inputPanel.add(locationTxt);
-
-		inputPanel.add(actionLabel);
-		inputPanel.add(actionTxt);
+		inputPanel.setLayout(new GridLayout(6, 1));
+		inputPanel.add(FirstnameLabel);
+		inputPanel.add(FirstnameTxt);
+		
+		inputPanel.add(LastnameLabel);
+		inputPanel.add(LastnameTxt);
+		
+		inputPanel.add(TimeLabel);
+		inputPanel.add(TimeTxt);
+		
+		inputPanel.add(LocationLabel);
+		inputPanel.add(LocationTxt);
+		
+		inputPanel.add(ReasonLabel);
+		inputPanel.add(ReasonTxt);
+		
+		inputPanel.add(ActionLabel);
+		inputPanel.add(ActionTxt);
 	}
 
 	// Next the panel with the buttons
@@ -91,17 +97,19 @@ public class MobileGUI {
 		window.pack();
 	}
 
-
-
 	public MobileGUI() {
-		String[] lines = null;
 		// Add your custom action listeners here
 		sendButton.addActionListener(new SendButtonListener());
 
 		// The default close action
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
+		receiveCallOut();
+	}
+
+	private void receiveCallOut() {
 		try {
+			String[] lines = null;
 			int serverPort = 6000;
 			ServerSocket listenSocket = new ServerSocket(serverPort);
 			while (true) {
@@ -125,13 +133,27 @@ public class MobileGUI {
 	private class SendButtonListener implements ActionListener {
 		// Called when the Add button is clicked
 		public void actionPerformed(ActionEvent arg0) {
-			String fname = firstnameTxt.getText();
-			String lname = lastnameTxt.getText();
-			String time = timeTxt.getText();
-			String location = locationTxt.getText();
-			String action = actionTxt.getText();
+			String fname = FirstnameTxt.getText();
+			String lname = LastnameTxt.getText();
+			String time = TimeTxt.getText();
+			String location = LocationTxt.getText();
+			String reason = ReasonTxt.getText();
+			String action = ActionTxt.getText();
 			
-			callData = fname;
+			String calloutDetails = (fname + ", " + lname + ", " + time + ", " + location + ", " + reason + "," + action );
+			
+			Socket s2 = null;
+			try {
+				int serverPort = 6001;
+				s2 = new Socket("localhost", serverPort);
+				DataOutputStream out = new DataOutputStream(s2.getOutputStream());
+				out.writeUTF(calloutDetails); // UTF is a string encoding format
+				s2.close();
+			} catch (Exception e) {
+				System.out.println("Error:" + e.getMessage());
+			}
 		}
+
 	}
+
 }
