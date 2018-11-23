@@ -3,14 +3,9 @@ package regionalOffice;
 public interface RegAppLayerInterface {
 	
 
-	public String addCall(String name);
+	public String addCall(String name, String lastname, String time, String location, String reason, String action, String regNumber);
 
-	/**
-	 * Gets a Student record
-	 * 
-	 * @param regNo The NHS registration number of the Patient to get
-	 * @return Message indicating the outcome of getting the Patient
-	 */
+
 	public String getPatient(String regNo);
 
 	public String checkData();

@@ -19,52 +19,61 @@ import javax.swing.JTextField;
 public class MobileGUI {
 	// First set up the panel with the labels and text boxes
 	private JPanel inputPanel = new JPanel();
-	private JLabel FirstnameLabel = new JLabel("First name");
-	private JTextField FirstnameTxt = new JTextField(10);
-	
-	private JLabel LastnameLabel = new JLabel("Last name");
-	private JTextField LastnameTxt = new JTextField(10);
-	
-	private JLabel TimeLabel = new JLabel("Time");
-	private JTextField TimeTxt = new JTextField(10);
-	
-	private JLabel LocationLabel = new JLabel("Location");
-	private JTextField LocationTxt = new JTextField(10);
-	
-	private JLabel ReasonLabel = new JLabel("Reason");
-	private JTextField ReasonTxt = new JTextField(10);
-	
-	private JLabel ActionLabel = new JLabel("Action Taken");
-	private JTextField ActionTxt = new JTextField(10);
+	private JLabel regNumberLabel = new JLabel("Nhs Registration No.");
+	private JTextField regNumberTxt = new JTextField(10);
+
+	private JLabel firstnameLabel = new JLabel("First name");
+	private JTextField firstnameTxt = new JTextField(10);
+
+	private JLabel lastnameLabel = new JLabel("Last name");
+	private JTextField lastnameTxt = new JTextField(10);
+
+	private JLabel timeLabel = new JLabel("Time");
+	private JTextField timeTxt = new JTextField(10);
+
+	private JLabel locationLabel = new JLabel("Location");
+	private JTextField locationTxt = new JTextField(10);
+
+	private JLabel reasonLabel = new JLabel("Reason");
+	private JTextField reasonTxt = new JTextField(10);
+
+	private JLabel actionLabel = new JLabel("Action Taken");
+	private JTextField actionTxt = new JTextField(10);
 	private String data;
 	private String callData;
+	String[] lines = null;
 
 	{
 		// Initialise the panel
-		inputPanel.setLayout(new GridLayout(6, 1));
-		inputPanel.add(FirstnameLabel);
-		inputPanel.add(FirstnameTxt);
-		
-		inputPanel.add(LastnameLabel);
-		inputPanel.add(LastnameTxt);
-		
-		inputPanel.add(TimeLabel);
-		inputPanel.add(TimeTxt);
-		
-		inputPanel.add(LocationLabel);
-		inputPanel.add(LocationTxt);
-		
-		inputPanel.add(ReasonLabel);
-		inputPanel.add(ReasonTxt);
-		
-		inputPanel.add(ActionLabel);
-		inputPanel.add(ActionTxt);
+		inputPanel.setLayout(new GridLayout(7, 1));
+		inputPanel.add(regNumberLabel);
+		inputPanel.add(regNumberTxt);
+
+		inputPanel.add(firstnameLabel);
+		inputPanel.add(firstnameTxt);
+
+		inputPanel.add(lastnameLabel);
+		inputPanel.add(lastnameTxt);
+
+		inputPanel.add(timeLabel);
+		inputPanel.add(timeTxt);
+
+		inputPanel.add(locationLabel);
+		inputPanel.add(locationTxt);
+
+		inputPanel.add(reasonLabel);
+		inputPanel.add(reasonTxt);
+
+		inputPanel.add(actionLabel);
+		inputPanel.add(actionTxt);
 	}
 
 	// Next the panel with the buttons
 	private JPanel buttonPanel = new JPanel();
 	private JButton sendButton = new JButton("Send");
-
+	private JButton clearButton = new JButton("Clear Fields");
+	private JButton exitButton = new JButton("Exit");
+	
 	{
 		// Initialise the panel
 		buttonPanel.setLayout(new GridLayout(3, 1));
@@ -77,6 +86,8 @@ public class MobileGUI {
 		topPanel.setLayout(new FlowLayout());
 		topPanel.add(inputPanel);
 		topPanel.add(buttonPanel);
+		buttonPanel.add(clearButton);
+		buttonPanel.add(exitButton);
 	}
 
 	// Create the panel which will display the feedback text
@@ -100,6 +111,8 @@ public class MobileGUI {
 	public MobileGUI() {
 		// Add your custom action listeners here
 		sendButton.addActionListener(new SendButtonListener());
+		clearButton.addActionListener(new ClearButtonListener());
+		exitButton.addActionListener(new ExitButtonListener());
 
 		// The default close action
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -107,9 +120,10 @@ public class MobileGUI {
 		receiveCallOut();
 	}
 
+	// Create a server and format the string recieved from client
 	private void receiveCallOut() {
 		try {
-			String[] lines = null;
+
 			int serverPort = 6000;
 			ServerSocket listenSocket = new ServerSocket(serverPort);
 			while (true) {
@@ -121,8 +135,8 @@ public class MobileGUI {
 						+ "\nFirst name:                        " + lines[1] + "\nLast name:                        "
 						+ lines[2] + "\nAddress:                            " + lines[3]
 						+ "\nCondition:                          " + lines[4]);
-				c.sendData("Mobile Data Sent " + callData );
-				
+				c.sendData("Mobile Data Sent " + callData);
+				regNumberTxt.setText(lines[0]);
 			}
 		} catch (IOException e) {
 			System.out.println("Listen: " + e.getMessage());
@@ -133,15 +147,17 @@ public class MobileGUI {
 	private class SendButtonListener implements ActionListener {
 		// Called when the Add button is clicked
 		public void actionPerformed(ActionEvent arg0) {
-			String fname = FirstnameTxt.getText();
-			String lname = LastnameTxt.getText();
-			String time = TimeTxt.getText();
-			String location = LocationTxt.getText();
-			String reason = ReasonTxt.getText();
-			String action = ActionTxt.getText();
-			
-			String calloutDetails = (fname + ", " + lname + ", " + time + ", " + location + ", " + reason + "," + action );
-			
+			String fname = firstnameTxt.getText();
+			String lname = lastnameTxt.getText();
+			String time = timeTxt.getText();
+			String location = locationTxt.getText();
+			String reason = reasonTxt.getText();
+			String action = actionTxt.getText();
+
+			String calloutDetails = (fname + ", " + lname + ", " + time + ", " + location + ", " + reason + "," + action
+					+ "," + lines[0]);
+
+			// Clinet to send the callout details to the reg office.
 			Socket s2 = null;
 			try {
 				int serverPort = 6001;
@@ -153,7 +169,27 @@ public class MobileGUI {
 				System.out.println("Error:" + e.getMessage());
 			}
 		}
+	}
+	private class ClearButtonListener implements ActionListener {
+		// Called when the Add button is clicked
+		public void actionPerformed(ActionEvent arg0) {
+			//clear textboxes
+			firstnameTxt.setText("");
+			lastnameTxt.setText("");
+			regNumberTxt.setText("");
+			locationTxt.setText("");
+			timeTxt.setText("");
+			reasonTxt.setText("");
+			actionTxt.setText("");
+		}
+	}
+	private class ExitButtonListener implements ActionListener {
+		// Called when the Add button is clicked
+		public void actionPerformed(ActionEvent arg0) {
+			//Close the program
+			System.exit(0);
 
+		}
 	}
 
 }

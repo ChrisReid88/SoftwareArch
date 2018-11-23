@@ -4,6 +4,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import headOffice.Patient;
+import regionalOffice.Callout;
 
 
 public interface DatabaseImpl extends Remote {
@@ -33,7 +34,7 @@ public interface DatabaseImpl extends Remote {
 	 */
 	public boolean updatePatient(String regNo, Patient patient) throws RemoteException;
 
-	public boolean addCall(String name) throws RemoteException;
+	public boolean addCall(Callout callout) throws RemoteException;
 
 	
 }

@@ -11,7 +11,7 @@ public class PatientDataLayer implements PatientDataLayerInterface {
 	public PatientDataLayer(){
 		
 	}
-
+	//Call add patient method on the stub
 	public boolean addPatient(Patient patient) {
 		try {
 			// Get the registry from the server (null = local host)
@@ -27,7 +27,7 @@ public class PatientDataLayer implements PatientDataLayerInterface {
 			return false;
 		}	
 	}
-
+	//call the update method on the stub
 	public boolean updatePatient(String regNo, Patient patient) {
 		try {
 			// Get the registry from the server (null = local host)
@@ -42,7 +42,7 @@ public class PatientDataLayer implements PatientDataLayerInterface {
 			return false;
 		}	
 	}
-
+	// get a patient from the db by calling this method to the stub
 	public Patient getPatient(String regNo) {
 		Patient student = null;
 		try {

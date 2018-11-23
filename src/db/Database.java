@@ -8,16 +8,21 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import headOffice.Patient;
+import regionalOffice.Callout;
 
 public class Database implements DatabaseImpl {
 
+    /**
+     * Add patient checks database for nhs number
+     * if not it adds it. 
+     */
 	public boolean addPatient(Patient patient) {
 		try {
-
+			//Load the driver
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			// Establish a connection to the database
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/patients?user=Java&password=Java");
-
+			//Create a statement
 			Statement statement2 = conn.createStatement();
 			// Query to get all records from the database
 			String query = "SELECT *  FROM patientrecords WHERE regNumber = '" + patient.getRegNumber() + "'";
@@ -58,7 +63,8 @@ public class Database implements DatabaseImpl {
 
 		return false;
 	}
-
+	
+	//Returns a patient from the DB
 	public Patient getPatient(String regNo) {
 
 		Patient patient = null;
@@ -107,7 +113,7 @@ public class Database implements DatabaseImpl {
 		return patient;
 
 	}
-
+	// Updates a patients record on the DB (not used presently)
 	public boolean updatePatient(String regNo, Patient patient) {
 		try {
 			// Load the driver
@@ -154,8 +160,9 @@ public class Database implements DatabaseImpl {
 		return true;
 
 	}
-
-	public boolean addCall(String name) {
+	
+	//Adds a call-out record to the database
+	public boolean addCall(Callout callout) {
 		try {
 
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -164,14 +171,34 @@ public class Database implements DatabaseImpl {
 
 			Statement statement2 = conn.createStatement();
 			// Query to get all records from the database
-			String query = "INSERT INTO callrecords (Name) VALUES ('" + name + "')";
+			String query = "SELECT *  FROM patientrecords WHERE regNumber = '" + callout.getRegNumber() + "'";
 			// Results from executing the query
-			statement2.executeUpdate(query);
+			ResultSet results = statement2.executeQuery(query);
 
-			statement2.close();
-			conn.close();
-			System.out.println("Update successful");
+			if (results.next()) {
+				// Create a new SQL statement
+				statement2.close();
+				Statement statement = conn.createStatement();
 
+				// Build the INSERT statement
+				String update = "INSERT INTO calloutrecords (RegNumber, Firstname, Lastname, DateTime, Location,  Reason, Action) VALUES ('"
+						+ callout.getRegNumber() + "', '" + callout.getFirstName() + "', '" + callout.getLastname()
+						+ "', '" + callout.getTime() + "', '" + callout.getLocation() + "', '" + callout.getReason()
+						+ "', '" + callout.getAction() + "')";
+				// Execute the statement
+
+				statement.executeUpdate(update);
+				// Release resources held by the statement
+				statement.close();
+				// Release resources held by the connection. This also ensures that the INSERT
+				// completes
+				conn.close();
+				System.out.println("Update successful");
+				return true;
+			} else {
+				System.out.println(" Problem!");
+				return false;
+			}
 		} catch (ClassNotFoundException cnf) {
 			System.err.println("Could not load driver");
 			System.err.println(cnf.getMessage());
@@ -179,7 +206,7 @@ public class Database implements DatabaseImpl {
 			System.err.println("Error in SQL Update");
 			System.err.println(sqe.getMessage());
 		}
-		return true;
+		return false;
 	}
 
 }

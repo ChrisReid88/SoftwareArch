@@ -10,6 +10,8 @@ class ConnectionMob extends Thread {
 	DataOutputStream out;
 	Socket clientSocket;
 	
+	
+	//Create a new thread
 	public ConnectionMob (Socket aClientSocket) {
 		try {
 			clientSocket = aClientSocket;
@@ -20,9 +22,9 @@ class ConnectionMob extends Thread {
 			System.out.println("Connection: " + e.getMessage());
 		}
 	}
-	
+	//Reads in from the socket then writes other data out.
 	public void run(String callOutData){
-		try { // an echo server
+		try {
 			String data = in.readUTF();
 			System.out.println("Received: " + data);
 			out.writeUTF(callOutData);
@@ -31,11 +33,12 @@ class ConnectionMob extends Thread {
 		}
 	}
 	
-	
+	//Return read from a socket
 	public String getData() throws IOException {
 		return  in.readUTF();
 	}
 	
+	//Write to out
 	public void sendData(String data) throws IOException {
 		out.writeUTF(data);
 	}

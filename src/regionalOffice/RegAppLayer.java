@@ -12,14 +12,13 @@ public class RegAppLayer implements RegAppLayerInterface {
 	public RegAppLayer (RegDataLayer dataLayer) {
 		this.dataLayer = dataLayer;
 		
-		
-	
 	}
 	
-	
-	public String addCall(String name) {
-		String fname = name;
-		boolean success =  dataLayer.addCall(fname);
+	//Create a new callout object and send to data layer
+	public String addCall(String firstname, String lastname, String time, String location, String reason, String action,String regNumber) {
+		Callout callout = new Callout(firstname, lastname, time, location, reason , action, regNumber);
+		System.out.println("Callout:" +  callout);
+		boolean success =  dataLayer.addCall(callout);
 		if (success) {
 			return "ADDED";
 		}else {
@@ -44,6 +43,8 @@ public class RegAppLayer implements RegAppLayerInterface {
 			return "patient " + regNo + " does not exist";
 		}
 	}
+	
+	//Server to check data (Unused)
 	public String checkData() {
 		String result = null;
 		
@@ -64,4 +65,5 @@ public class RegAppLayer implements RegAppLayerInterface {
 		}
 		return result;
 	}
+
 }

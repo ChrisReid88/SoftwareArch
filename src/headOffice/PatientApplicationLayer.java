@@ -16,10 +16,15 @@ public class PatientApplicationLayer implements PatientApplicationLayerInterface
 		this.dataLayer = dataLayer;
 	}
 	
-	
+	/**
+	 * Invoke a patient method on the datalayer with a patient object 
+	 * as its parameters.
+	 */
 	public String addPatient(String fname, String lname, String regNo, String address, String cond) {
 		Patient patient = new Patient(fname, lname, regNo, address, cond);
 		boolean success = dataLayer.addPatient(patient);
+		
+		//Start new server and send the regno
 		Socket s = null;
 		try {
 			int serverPort = 7896;
@@ -39,7 +44,7 @@ public class PatientApplicationLayer implements PatientApplicationLayerInterface
 		}
 	}
 
-	
+	//Return a patient
 	public String getPatient(String regNo) {
 		Patient patient = dataLayer.getPatient(regNo);
 		if (patient != null)
@@ -57,7 +62,7 @@ public class PatientApplicationLayer implements PatientApplicationLayerInterface
 			return "patient " + regNo + " does not exist";
 		}
 	}
-	
+	// Update a patient record
 	public String updatePatient(String fname, String lname, String regNo, String address, String cond) {
 		// Create a new Patient record object
 		Patient patient = new Patient(fname, lname, regNo, address, cond);

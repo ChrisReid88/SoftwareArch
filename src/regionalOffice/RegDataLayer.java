@@ -13,15 +13,15 @@ public class RegDataLayer implements RegDataLayerInterface {
 	}
 
 
-	public boolean addCall(String fname) {
+	public boolean addCall(Callout callout) {
 		try {
 			// Get the registry from the server (null = local host)
 			Registry registry = LocateRegistry.getRegistry(null);
 
 			// Look up the remote object
 			DatabaseImpl stub = (DatabaseImpl) registry.lookup("Database");
-			stub.addCall(fname);
-			return true;
+			boolean res = stub.addCall(callout);
+			return res;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

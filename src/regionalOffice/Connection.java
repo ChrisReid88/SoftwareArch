@@ -10,6 +10,7 @@ class Connection extends Thread {
 	DataOutputStream out;
 	Socket clientSocket;
 	
+	//Start a new sever thread
 	public Connection (Socket aClientSocket) {
 		try {
 			clientSocket = aClientSocket;

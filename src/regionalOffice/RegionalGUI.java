@@ -20,58 +20,61 @@ public class RegionalGUI {
 	
 	// First set up the panel with the labels and text boxes
 	private JPanel inputPanel = new JPanel();
-	private JLabel FirstnameLabel = new JLabel("First name");
-	private JTextField FirstnameTxt = new JTextField(10);
+	private JLabel firstnameLabel = new JLabel("First name");
+	private JTextField firstnameTxt = new JTextField(10);
 	
-	private JLabel LastnameLabel = new JLabel("Last name");
-	private JTextField LastnameTxt = new JTextField(10);
+	private JLabel lastnameLabel = new JLabel("Last name");
+	private JTextField lastnameTxt = new JTextField(10);
 	
-	private JLabel TimeLabel = new JLabel("Time");
-	private JTextField TimeTxt = new JTextField(10);
+	private JLabel timeLabel = new JLabel("Time");
+	private JTextField timeTxt = new JTextField(10);
 	
-	private JLabel LocationLabel = new JLabel("Location");
-	private JTextField LocationTxt = new JTextField(10);
+	private JLabel locationLabel = new JLabel("Location");
+	private JTextField locationTxt = new JTextField(10);
 	
-	private JLabel ReasonLabel = new JLabel("Reason");
-	private JTextField ReasonTxt = new JTextField(10);
+	private JLabel reasonLabel = new JLabel("Reason");
+	private JTextField reasonTxt = new JTextField(10);
 	
-	private JLabel ActionLabel = new JLabel("Action Taken");
-	private JTextField ActionTxt = new JTextField(10);
+	private JLabel actionLabel = new JLabel("Action Taken");
+	private JTextField actionTxt = new JTextField(10);
 	private String data;
 	private String result;
-
+	String[] callOutDetails = null;
 	{
 		// Initialise the panel
 		inputPanel.setLayout(new GridLayout(6, 1));
-		inputPanel.add(FirstnameLabel);
-		inputPanel.add(FirstnameTxt);
+		inputPanel.add(firstnameLabel);
+		inputPanel.add(firstnameTxt);
 		
-		inputPanel.add(LastnameLabel);
-		inputPanel.add(LastnameTxt);
+		inputPanel.add(lastnameLabel);
+		inputPanel.add(lastnameTxt);
 		
-		inputPanel.add(TimeLabel);
-		inputPanel.add(TimeTxt);
+		inputPanel.add(timeLabel);
+		inputPanel.add(timeTxt);
 		
-		inputPanel.add(LocationLabel);
-		inputPanel.add(LocationTxt);
+		inputPanel.add(locationLabel);
+		inputPanel.add(locationTxt);
 		
-		inputPanel.add(ReasonLabel);
-		inputPanel.add(ReasonTxt);
+		inputPanel.add(reasonLabel);
+		inputPanel.add(reasonTxt);
 		
-		inputPanel.add(ActionLabel);
-		inputPanel.add(ActionTxt);
+		inputPanel.add(actionLabel);
+		inputPanel.add(actionTxt);
 	}
 
 	// Next the panel with the buttons
 	private JPanel buttonPanel = new JPanel();
 	private JButton addButton = new JButton("Enter");
 	private JButton sendButton = new JButton("Send");
-
+	private JButton clearButton = new JButton("Clear Fields");
+	private JButton exitButton = new JButton("Exit");
 	{
 		// Initialise the panel
-		buttonPanel.setLayout(new GridLayout(2, 1));
+		buttonPanel.setLayout(new GridLayout(4, 1));
 		buttonPanel.add(addButton);
 		buttonPanel.add(sendButton);
+		buttonPanel.add(clearButton);
+		buttonPanel.add(exitButton);
 	}
 
 	// Now create a panel with the input and button panels in. This is the top panel
@@ -115,6 +118,8 @@ public class RegionalGUI {
 		// Add your custom action listeners here
 		addButton.addActionListener(new AddButtonListener());
 		sendButton.addActionListener(new SendButtonListener());
+		exitButton.addActionListener(new ExitButtonListener());
+		clearButton.addActionListener(new ClearButtonListener());
 
 		// The default close action
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -123,9 +128,30 @@ public class RegionalGUI {
 		
 		
 	}
+	private class ClearButtonListener implements ActionListener {
+		// Called when the Add button is clicked
+		public void actionPerformed(ActionEvent arg0) {
+			//clear textboxes
+			firstnameTxt.setText("");
+			lastnameTxt.setText("");
+			locationTxt.setText("");
+			timeTxt.setText("");
+			reasonTxt.setText("");
+			actionTxt.setText("");
+		}
+	}
+	
+	private class ExitButtonListener implements ActionListener {
+		// Called when the Add button is clicked
+		public void actionPerformed(ActionEvent arg0) {
+			//Close the program
+			System.exit(0);
+
+		}
+	}
 	public void receiveCallDetails() {
 		String[] lines = null;
-		String[] callOutDetails = null;
+		
 		try {
 			int serverPort = 7896;
 			int serverPort2 = 6001;
@@ -155,12 +181,12 @@ public class RegionalGUI {
 				callOutDetails = cOut.split(",");
 				
 				System.out.println(cOut);
-				FirstnameTxt.setText(callOutDetails[0]);
-				LastnameTxt.setText(callOutDetails[1]);
-				TimeTxt.setText(callOutDetails[2]);
-				LocationTxt.setText(callOutDetails[3]);
-				ReasonTxt.setText(callOutDetails[4]);
-				ActionTxt.setText(callOutDetails[5]);
+				firstnameTxt.setText(callOutDetails[0]);
+				lastnameTxt.setText(callOutDetails[1]);
+				timeTxt.setText(callOutDetails[2]);
+				locationTxt.setText(callOutDetails[3]);
+				reasonTxt.setText(callOutDetails[4]);
+				actionTxt.setText(callOutDetails[5]);
 				System.out.println(callOutDetails);
 			}
 		} 
@@ -172,6 +198,7 @@ public class RegionalGUI {
 	
 	
 	public void sendToAmbulance() {
+		//client to send result to ambulance
 		Socket s = null;
 		try {
 			int serverPort = 6000;
@@ -191,13 +218,14 @@ public class RegionalGUI {
 		// Called when the Add button is clicked
 		public void actionPerformed(ActionEvent arg0) {
 			// Get the required values from the text fields
-			String fname = FirstnameTxt.getText();
-			String lname = LastnameTxt.getText();
-			String time = TimeTxt.getText();
-			String location = LocationTxt.getText();
-			String action = ActionTxt.getText();
+			String firstname = firstnameTxt.getText();
+			String lastname = lastnameTxt.getText();
+			String time = timeTxt.getText();
+			String location = locationTxt.getText();
+			String reason = reasonTxt.getText();
+			String action = actionTxt.getText();
 			
-			String add = appLayer.addCall(data);
+			String result = appLayer.addCall(firstname, lastname,time,location,reason, action, callOutDetails[6]);
 			//System.out.println(data+" DONE");
 			// Set the text in the feedback area to the result
 			feedbackArea.setText(result);
